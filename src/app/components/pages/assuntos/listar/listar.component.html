@@ -1,0 +1,71 @@
+<div class="container mt-4">
+    <h3>Lista de Assuntos</h3>
+  
+    <!-- Loading -->
+    <div *ngIf="loading" class="text-center">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Carregando...</span>
+      </div>
+    </div>
+  
+    <!-- Mensagem de Erro -->
+    <div *ngIf="mensagemErro" class="alert alert-danger">
+      {{ mensagemErro }}
+    </div>
+  
+    <!-- Tabela de Autores -->
+    <table *ngIf="!loading && assuntos.length > 0" class="table table-striped">
+      <thead>
+        <tr>
+          <th>Ações</th>
+          <th>ID</th>
+          <th>Nome</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let autor of assuntos">
+          <td>
+            <button class="btn btn-sm btn-warning me-2" [routerLink]="['/assuntos/editar', autor.id]">
+              Editar
+            </button>
+            <button class="btn btn-sm btn-danger" (click)="abrirModalDeletar(autor.id)">
+              Deletar
+            </button>
+          </td>
+          <td>{{ autor.id }}</td>
+          <td>{{ autor.descricao }}</td>
+  
+        </tr>
+      </tbody>
+    </table>
+  
+    <div
+      id="modalDeletar"
+      class="modal"
+      tabindex="-1"
+      role="dialog"
+      style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5);"
+    >
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Confirmação</h5>
+            <button type="button" class="btn-close" (click)="fecharModal()"></button>
+          </div>
+          <div class="modal-body">
+            <p>Tem certeza que deseja deletar este autor?</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="fecharModal()">Cancelar</button>
+            <button type="button" class="btn btn-danger" (click)="confirmarDelecao()">Deletar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Nenhum Autor Encontrado -->
+    <div *ngIf="!loading && assuntos.length === 0" class="alert alert-info">
+      Nenhum autor encontrado.
+    </div>
+  </div>
+  

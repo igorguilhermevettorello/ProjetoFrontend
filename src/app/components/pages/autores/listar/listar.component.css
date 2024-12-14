@@ -1,0 +1,14 @@
+.modal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1050;
+}
+
+.modal-content {
+  background-color: white;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  width: 500px;
+  max-width: 90%;
+}
