@@ -33,7 +33,238 @@
       </div>
     </div>
 
+    <div class="mb-3">
+      <label for="editora" class="form-label">Editora</label>
+      <input
+        id="nome"
+        type="text"
+        class="form-control"
+        [(ngModel)]="editora"
+        name="editora"
+        maxlength="40"
+        placeholder="Digite a editora do livro"
+        (focus)="onFocusEditora()" 
+      />
+      <!-- Mensagem de erro -->
+      <div *ngIf="erroEditora" class="text-danger mt-1">
+        O campo "Editora" é obrigatório!
+      </div>
+      <!-- <div *ngIf="mensagemErro" class="text-danger mt-1">
+        {{ mensagemErro }}
+      </div> -->
+      <!-- <div *ngIf="sucesso" class="text-success mt-1">
+        {{ sucesso }}
+      </div> -->
+    </div>
+
+    <div class="mb-3">
+      <label for="edicao" class="form-label">Edição</label>
+      <input
+        id="nome"
+        type="number"
+        class="form-control"
+        [(ngModel)]="edicao"
+        name="edicao"
+        maxlength="4"
+        placeholder="Digite a edição do livro"
+        (focus)="onFocusEdicao()" 
+      />
+      <!-- Mensagem de erro -->
+      <div *ngIf="erroEdicao" class="text-danger mt-1">
+        O campo "Edição" é obrigatório!
+      </div>
+      <div *ngIf="erroEdicaoNumber" class="text-danger mt-1">
+        O campo "Edição" deve ser maior que zero!
+      </div>
+      <!-- <div *ngIf="mensagemErro" class="text-danger mt-1">
+        {{ mensagemErro }}
+      </div> -->
+      <!-- <div *ngIf="sucesso" class="text-success mt-1">
+        {{ sucesso }}
+      </div> -->
+    </div>
+
+    <div class="mb-3">
+      <label for="ano-publicacao" class="form-label">Ano de Publicação</label>
+      <input
+        id="ano-publicacao"
+        type="number"
+        class="form-control"
+        [(ngModel)]="anoPublicacao"
+        name="ano-publicacao"
+        maxlength="4"
+        placeholder="Digite a edição do livro"
+        (focus)="onFocusAnoPublicacao()" 
+      />
+      <!-- Mensagem de erro -->
+      <div *ngIf="erroAnoPublicacao" class="text-danger mt-1">
+        O campo "Ano de Publicação" é obrigatório!
+      </div>
+      <div *ngIf="erroAnoPublicacaoNumber" class="text-danger mt-1">
+        O campo "Ano de Publicação" deve ser maior que zero!
+      </div>
+      <!-- <div *ngIf="mensagemErro" class="text-danger mt-1">
+        {{ mensagemErro }}
+      </div> -->
+      <!-- <div *ngIf="sucesso" class="text-success mt-1">
+        {{ sucesso }}
+      </div> -->
+    </div>
+
+    <div class="mb-3">
+      <label for="valor" class="form-label">Valor do Livro (R$)</label>
+      <input
+        type="text"
+        id="valor"
+        class="form-control"
+        currencyMask
+        [options]="customOptions"
+        [(ngModel)]="valor"
+        name="valor"
+        placeholder="Digite o valor do livro"
+        maxlength="18"
+      />
+    </div>
+
+    <div class="mb-3">
+      <div class="align-elements mb-3">
+        <label for="selectAutores" class="form-label label-bottom">Autores</label>
+        <button style="flex:auto" class="btn btn-primary" (click)="abrirModalAutor()">Adicionar Autor</button>
+      </div>
+      
+      <select
+        id="selectAutores"
+        class="form-select"
+        [(ngModel)]="autoresSelecionados"
+        name="autoresSelecionados"
+        multiple
+      >
+        <option *ngFor="let item of listaAutores" [value]="item.id">
+          {{ item.nome }}
+        </option>
+      </select>
+    </div>
+  
+    <!-- Exibir Itens Selecionados -->
+    <div>
+      <h6>Autor(es) selecionado(s):</h6>
+      <ul>
+        <li *ngFor="let id of autoresSelecionados">
+          {{ getItemNome(id) }}
+        </li>
+      </ul>
+    </div>
+
+    <div class="mb-3">
+      <div class="align-elements mb-3">
+        <label for="selectAssuntos" class="form-label label-bottom">Assuntos</label>
+        <button style="flex:auto" class="btn btn-primary" (click)="abrirModalAssunto()">Adicionar Assunto</button>
+      </div>
+      
+      <select
+        id="selectAssuntos"
+        class="form-select"
+        [(ngModel)]="assuntosSelecionados"
+        name="assuntosSelecionados"
+        multiple
+      >
+        <option *ngFor="let item of listaAssuntos" [value]="item.id">
+          {{ item.descricao }}
+        </option>
+      </select>
+    </div>
+  
+    <!-- Exibir Itens Selecionados -->
+    <div>
+      <h6>Assunto(s) selecionado(s):</h6>
+      <ul>
+        <li *ngFor="let id of assuntosSelecionados">
+          {{ getItemDescricao(id) }}
+        </li>
+      </ul>
+    </div>
+
     <!-- Botão Salvar -->
     <button type="button" class="btn btn-primary" (click)="onSalvar()">Salvar</button>
   </form>
+</div>
+
+<div
+  id="modalSalvarAutor"
+  class="modal"
+  tabindex="-1"
+  role="dialog"
+  style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5);"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Adicionar Autor</h5>
+        <button type="button" class="btn-close" (click)="fecharModalAutor()"></button>
+      </div>
+      <div class="modal-body">
+        <form novalidate>
+          <div class="mb-3">
+            <label for="nomeAutor" class="form-label">Nome do Autor</label>
+            <input
+              type="text"
+              id="nomeAutor"
+              class="form-control"
+              [(ngModel)]="novoAutor.nome"
+              name="nomeAutor"
+              maxlength="40"
+              placeholder="Digite o nome do autor"
+            />
+            <div *ngIf="erroNome" class="text-danger mt-1">
+              O campo "Nome" é obrigatório!
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="fecharModalAutor()">Cancelar</button>
+        <button type="button" class="btn btn-primary" (click)="salvarAutor()">Salvar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  id="modalSalvarAssunto"
+  class="modal"
+  tabindex="-1"
+  role="dialog"
+  style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5);"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Adicionar Assunto</h5>
+        <button type="button" class="btn-close" (click)="fecharModalAssunto()"></button>
+      </div>
+      <div class="modal-body">
+        <form novalidate>
+          <div class="mb-3">
+            <label for="descricaoAssunto" class="form-label">Descrição</label>
+            <input
+              type="text"
+              id="descricaoAssunto"
+              class="form-control"
+              [(ngModel)]="novoAssunto.descricao"
+              name="descricaoAssuntor"
+              maxlength="20"
+              placeholder="Digite a descrição do assunto"
+            />
+            <div *ngIf="erroDescricao" class="text-danger mt-1">
+              O campo "Descrição" é obrigatório!
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="fecharModalAssunto()">Cancelar</button>
+        <button type="button" class="btn btn-primary" (click)="salvarAssunto()">Salvar</button>
+      </div>
+    </div>
+  </div>
 </div>

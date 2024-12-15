@@ -5,14 +5,15 @@ import { CriarLivroModel } from 'src/app/interfaces/livros/criar.livro.model';
 import { RetornoLivroModel } from 'src/app/interfaces/livros/retorno.livro.model'; 
 import { ListaLivrosModel } from 'src/app/interfaces/livros/lista.livros.model';
 import { catchError } from 'rxjs/operators';
+import { AlterarLivroModel } from 'src/app/interfaces/livros/alterar.livro.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LivroService {
 
-  private apiUrl = 'https://localhost:7013/api/Livro';
-  private apiUrlListar = 'https://localhost:7013/api/Livro';
+  private apiUrl = 'https://localhost:7167/api/Livro';
+  private apiUrlListar = 'https://localhost:7167/api/Livro';
 
   constructor(private http: HttpClient) {}
 
@@ -53,7 +54,7 @@ export class LivroService {
     );
   }
 
-  editarLivro(id: string, livro: ListaLivrosModel): Observable<void> {
+  editarLivro(id: string, livro: AlterarLivroModel): Observable<void> {
     return this.http.put<void>(`${this.apiUrl}/${id}`, livro).pipe(
       catchError((error: HttpErrorResponse) => {
         console.error('Erro ao editar livro:', error);

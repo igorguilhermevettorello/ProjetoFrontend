@@ -11,8 +11,8 @@ import { catchError } from 'rxjs/operators';
 })
 export class AssuntoService {
 
-  private apiUrl = 'https://localhost:7013/api/Assunto';
-  private apiUrlListar = 'https://localhost:7013/api/Assunto';
+  private apiUrl = 'https://localhost:7167/api/Assunto';
+  private apiUrlListar = 'https://localhost:7167/api/Assunto';
 
   constructor(private http: HttpClient) {}
 

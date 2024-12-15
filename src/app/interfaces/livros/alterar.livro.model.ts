@@ -1,4 +1,5 @@
-export interface CriarLivroModel {
+export interface AlterarLivroModel {
+  id: string;
   titulo: string;
   editora: string;
   edicao: number;

@@ -65,16 +65,4 @@ export class ListarComponent implements OnInit {
       }
     });
   }
-
-  // // Placeholder para editar autor
-  // editarAutor(id: string): void {
-  //   console.log(`Editar autor com ID: ${id}`);
-  //   // Aqui você pode navegar para a página de edição
-  // }
-
-  // // Placeholder para deletar autor
-  // deletarAutor(id: string): void {
-  //   console.log(`Deletar autor com ID: ${id}`);
-  //   // Aqui você pode chamar um método do serviço para deletar o autor
-  // }
 }

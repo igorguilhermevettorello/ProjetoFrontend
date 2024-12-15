@@ -12,8 +12,8 @@ import { catchError } from 'rxjs/operators';
 
 export class AutorService {
 
-  private apiUrl = 'https://localhost:7013/api/Autor';
-  private apiUrlListar = 'https://localhost:7013/api/Autor';
+  private apiUrl = 'https://localhost:7167/api/Autor';
+  private apiUrlListar = 'https://localhost:7167/api/Autor';
 
   constructor(private http: HttpClient) {}
 

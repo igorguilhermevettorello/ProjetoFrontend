@@ -1,19 +1,81 @@
-<table class="table table-striped">
+<div class="container mt-4">
+  <h3>Lista de Livros</h3>
+
+  <!-- Loading -->
+  <div *ngIf="loading" class="text-center">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Carregando...</span>
+    </div>
+  </div>
+
+  <!-- Mensagem de Erro -->
+  <div *ngIf="mensagemErro" class="alert alert-danger">
+    {{ mensagemErro }}
+  </div>
+
+  <!-- Tabela de Autores -->
+  <table *ngIf="!loading && livros.length > 0" class="table table-striped">
     <thead>
       <tr>
-        <th>ID</th>
-        <th>Nome</th>
         <th>Ações</th>
+        <th>ID</th>
+        <th>Título</th>
+        <th>Autores</th>
+        <th>Assuntos</th>
       </tr>
     </thead>
     <tbody>
-      <tr>
-        <td>1</td>
-        <td>Nome Exemplo</td>
+      <tr *ngFor="let livro of livros">
         <td>
-          <button class="btn btn-sm btn-warning">Editar</button>
-          <button class="btn btn-sm btn-danger">Deletar</button>
+          <button class="btn btn-sm btn-warning me-2" [routerLink]="['/livros/editar', livro.id]">
+            Editar
+          </button>
+          <button class="btn btn-sm btn-danger" (click)="abrirModalDeletar(livro.id)">
+            Deletar
+          </button>
+        </td>
+        <td>{{ livro.id }}</td>
+        <td>{{ livro.titulo }}</td>
+        <td>
+          <div *ngFor="let autor of livro.autores">
+            <p>{{ autor.nome }}</p>
+          </div>
+        </td>
+        <td>
+          <div *ngFor="let assunto of livro.assuntos">
+            <p>{{ assunto.descricao }}</p>
+          </div>
         </td>
       </tr>
     </tbody>
   </table>
+
+  <div
+    id="modalDeletar"
+    class="modal"
+    tabindex="-1"
+    role="dialog"
+    style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5);"
+  >
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Confirmação</h5>
+          <button type="button" class="btn-close" (click)="fecharModal()"></button>
+        </div>
+        <div class="modal-body">
+          <p>Tem certeza que deseja deletar este livro?</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="fecharModal()">Cancelar</button>
+          <button type="button" class="btn btn-danger" (click)="confirmarDelecao()">Deletar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Nenhum Autor Encontrado -->
+  <div *ngIf="!loading && livros.length === 0" class="alert alert-info">
+    Nenhum autor encontrado.
+  </div>
+</div>

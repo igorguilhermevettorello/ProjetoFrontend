@@ -1,0 +1,10 @@
+.align-elements {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.label-bottom {
+    flex: 10;
+    margin: 0px;
+}

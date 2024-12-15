@@ -25,6 +25,11 @@
       <div *ngIf="erroNome" class="text-danger mt-1">
         O campo "Nome" é obrigatório!
       </div>
+      <div *ngIf="erroNomeTamanho" class="text-danger mt-1">
+        O campo "Nome" deve ter no máximo 40 caracteres!
+      </div>
+      
+
       <div *ngIf="mensagemErro" class="text-danger mt-1">
         {{ mensagemErro }}
       </div>

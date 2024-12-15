@@ -13,6 +13,8 @@ export class CadastrarComponent implements OnInit {
 
   nome: string = ''; 
   erroNome: boolean = false; 
+  erroNomeTamanho: boolean = false; 
+
   loading: boolean = false;
   mensagemErro: string = ''; 
   sucesso: string = ''; 
@@ -55,6 +57,12 @@ export class CadastrarComponent implements OnInit {
       return;
     }
 
+    console.log(this.nome.length);
+    if (this.nome.length > 40) {
+      this.erroNomeTamanho = true;
+      return;
+    }
+
     // Exibe o loading
     this.loading = true;
 
@@ -94,5 +102,6 @@ export class CadastrarComponent implements OnInit {
   
   onFocus(): void {
     this.erroNome = false; // Oculta a mensagem de erro
+    this.erroNomeTamanho = false;
   }
 }
