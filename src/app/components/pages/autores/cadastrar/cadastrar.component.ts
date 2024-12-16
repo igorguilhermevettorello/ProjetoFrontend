@@ -20,6 +20,10 @@ export class CadastrarComponent implements OnInit {
   sucesso: string = ''; 
   autorId: string | null = null;
 
+  tituloModal: string = 'Mensagem'; 
+  mensagemModal: string = '';  
+  tipoMensagem: string = '';  
+
   constructor(
     private autorService: AutorService,
     private route: ActivatedRoute,
@@ -74,13 +78,12 @@ export class CadastrarComponent implements OnInit {
       this.autorService.editarAutor(this.autorId, autor).subscribe({
         next: () => {
           this.loading = false;
-          this.sucesso = 'Autor atualizado com sucesso!';
-          this.router.navigate(['/autores/listar']);
+          this.abrirModalMensagem('Sucesso', 'O autor foi atualizado com sucesso!', 'sucesso');
         },
         error: (error) => {
-          console.error('Erro ao atualizar autor:', error);
-          this.mensagemErro = 'Erro ao atualizar o autor.';
+          this.abrirModalMensagem('Mensagem', `Erro ao atualizar autor: ${JSON.stringify(error)}` , 'erro');
           this.loading = false;
+          console.error('Erro ao atualizar autor:', error);
         }
       });
     } else {
@@ -88,13 +91,12 @@ export class CadastrarComponent implements OnInit {
       this.autorService.salvarAutor(autor).subscribe({
         next: () => {
           this.loading = false;
-          this.sucesso = 'Autor salvo com sucesso!';
-          this.router.navigate(['/autores/listar']);
+          this.abrirModalMensagem('Sucesso', 'O autor foi salvo com sucesso!', 'sucesso');
         },
         error: (error) => {
-          console.error('Erro ao salvar autor:', error);
-          this.mensagemErro = 'Erro ao salvar o autor.';
           this.loading = false;
+          this.abrirModalMensagem('Mensagem', `Erro ao salvar autor: ${JSON.stringify(error)}` , 'erro');
+          console.error('Erro ao salvar autor:', error);
         }
       });
     }
@@ -103,5 +105,28 @@ export class CadastrarComponent implements OnInit {
   onFocus(): void {
     this.erroNome = false; // Oculta a mensagem de erro
     this.erroNomeTamanho = false;
+  }
+
+  abrirModalMensagem(titulo: string, mensagem: string, tipo: 'sucesso' | 'erro'): void {
+    this.tituloModal = titulo;
+    this.mensagemModal = mensagem;
+    this.tipoMensagem = tipo;
+
+    const modalElement = document.getElementById('mensagemModal');
+    if (modalElement) {
+      modalElement.classList.add('show');
+      modalElement.style.display = 'block';
+      document.body.classList.add('modal-open');
+    }
+  }
+
+  fecharModalMensagem(): void {
+    const modalElement = document.getElementById('mensagemModal');
+    if (modalElement) {
+      modalElement.classList.remove('show');
+      modalElement.style.display = 'none';
+      document.body.classList.remove('modal-open');
+    }
+    this.router.navigate(['/autores/listar']);
   }
 }

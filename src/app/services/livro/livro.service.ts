@@ -14,6 +14,7 @@ export class LivroService {
 
   private apiUrl = 'https://localhost:7167/api/Livro';
   private apiUrlListar = 'https://localhost:7167/api/Livro';
+  private apiUrlDownload = 'https://localhost:7167/api/Relatorio/Livros';
 
   constructor(private http: HttpClient) {}
 
@@ -61,5 +62,9 @@ export class LivroService {
         return throwError(() => error);
       })
     );
+  }
+
+  gerarArquivo(): Observable<Blob> {
+    return this.http.get(this.apiUrlDownload, { responseType: 'blob' });
   }
 }

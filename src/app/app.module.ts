@@ -12,6 +12,7 @@ import { CadastrarComponent as CadastrarAssuntosComponent} from './components/pa
 import { ListarComponent as ListarAssuntosComponent} from './components/pages/assuntos/listar/listar.component';
 import { CadastrarComponent as CadastrarLivrosComponent} from './components/pages/livros/cadastrar/cadastrar.component';
 import { ListarComponent as ListarLivrosComponent} from './components/pages/livros/listar/listar.component';
+import { MonetarioPipe } from './pipes/monetario.pipe';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,8 @@ import { ListarComponent as ListarLivrosComponent} from './components/pages/livr
     CadastrarAssuntosComponent,
     ListarAssuntosComponent,
     CadastrarLivrosComponent,
-    ListarLivrosComponent
+    ListarLivrosComponent,
+    MonetarioPipe
   ],
   imports: [
     BrowserModule,

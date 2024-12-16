@@ -49,12 +49,6 @@
       <div *ngIf="erroEditora" class="text-danger mt-1">
         O campo "Editora" é obrigatório!
       </div>
-      <!-- <div *ngIf="mensagemErro" class="text-danger mt-1">
-        {{ mensagemErro }}
-      </div> -->
-      <!-- <div *ngIf="sucesso" class="text-success mt-1">
-        {{ sucesso }}
-      </div> -->
     </div>
 
     <div class="mb-3">
@@ -65,8 +59,8 @@
         class="form-control"
         [(ngModel)]="edicao"
         name="edicao"
-        maxlength="4"
         placeholder="Digite a edição do livro"
+        (input)="validarNumero($event)"
         (focus)="onFocusEdicao()" 
       />
       <!-- Mensagem de erro -->
@@ -76,12 +70,6 @@
       <div *ngIf="erroEdicaoNumber" class="text-danger mt-1">
         O campo "Edição" deve ser maior que zero!
       </div>
-      <!-- <div *ngIf="mensagemErro" class="text-danger mt-1">
-        {{ mensagemErro }}
-      </div> -->
-      <!-- <div *ngIf="sucesso" class="text-success mt-1">
-        {{ sucesso }}
-      </div> -->
     </div>
 
     <div class="mb-3">
@@ -92,23 +80,17 @@
         class="form-control"
         [(ngModel)]="anoPublicacao"
         name="ano-publicacao"
-        maxlength="4"
         placeholder="Digite a edição do livro"
+        (input)="validarNumero($event)"
         (focus)="onFocusAnoPublicacao()" 
       />
-      <!-- Mensagem de erro -->
+      
       <div *ngIf="erroAnoPublicacao" class="text-danger mt-1">
         O campo "Ano de Publicação" é obrigatório!
       </div>
       <div *ngIf="erroAnoPublicacaoNumber" class="text-danger mt-1">
         O campo "Ano de Publicação" deve ser maior que zero!
       </div>
-      <!-- <div *ngIf="mensagemErro" class="text-danger mt-1">
-        {{ mensagemErro }}
-      </div> -->
-      <!-- <div *ngIf="sucesso" class="text-success mt-1">
-        {{ sucesso }}
-      </div> -->
     </div>
 
     <div class="mb-3">
@@ -124,6 +106,9 @@
         placeholder="Digite o valor do livro"
         maxlength="18"
       />
+      <div *ngIf="erroValor" class="text-danger mt-1">
+        O campo "Valor" deve ser maior que zero!
+      </div>
     </div>
 
     <div class="mb-3">
@@ -136,6 +121,7 @@
         id="selectAutores"
         class="form-select"
         [(ngModel)]="autoresSelecionados"
+        (change)="onChangeSelectAutores($event)"
         name="autoresSelecionados"
         multiple
       >
@@ -143,6 +129,9 @@
           {{ item.nome }}
         </option>
       </select>
+      <div *ngIf="erroAutoresSelecionados" class="text-danger mt-1">
+        Pelo menos um autor deve ser informado.
+      </div>
     </div>
   
     <!-- Exibir Itens Selecionados -->
@@ -165,6 +154,7 @@
         id="selectAssuntos"
         class="form-select"
         [(ngModel)]="assuntosSelecionados"
+        (change)="onChangeSelectAssuntos($event)"
         name="assuntosSelecionados"
         multiple
       >
@@ -172,6 +162,9 @@
           {{ item.descricao }}
         </option>
       </select>
+      <div *ngIf="erroAssuntosSelecionados" class="text-danger mt-1">
+        Pelo menos um assunto deve ser informado.
+      </div>
     </div>
   
     <!-- Exibir Itens Selecionados -->
@@ -264,6 +257,41 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" (click)="fecharModalAssunto()">Cancelar</button>
         <button type="button" class="btn btn-primary" (click)="salvarAssunto()">Salvar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  class="modal fade"
+  id="mensagemModal"
+  tabindex="-1"
+  aria-labelledby="mensagemModalLabel"
+  aria-hidden="true"
+  style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5);"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="mensagemModalLabel">{{ tituloModal }}</h5>
+        <button
+          type="button"
+          class="btn-close"
+          aria-label="Close"
+          (click)="fecharModalMensagem()"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <div *ngIf="tipoMensagem === 'sucesso'" class="text-success mt-1">
+          {{ mensagemModal }}
+        </div>
+
+        <div *ngIf="tipoMensagem === 'erro'" class="text-danger mt-1">
+          {{ mensagemModal }}
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" (click)="fecharModalMensagem()">OK</button>
       </div>
     </div>
   </div>

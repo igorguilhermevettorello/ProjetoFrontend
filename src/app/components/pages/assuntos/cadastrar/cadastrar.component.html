@@ -1,39 +1,73 @@
 <div class="container mt-4">
-    <h3>Cadastro de Assunto</h3>
-  
-    <div *ngIf="loading" class="loading-overlay">
-      <div class="spinner-border text-primary" role="status">
-        <span class="visually-hidden">Carregando...</span>
+  <h3>Cadastro de Assunto</h3>
+
+  <div *ngIf="loading" class="loading-overlay">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Carregando...</span>
+    </div>
+  </div>
+
+  <form (ngSubmit)="onSalvar()" novalidate>
+    
+    <div class="mb-3">
+      <label for="descricao" class="form-label">Descrição</label>
+      <input
+        id="descricao"
+        type="text"
+        class="form-control"
+        [(ngModel)]="descricao"
+        name="descricao"
+        maxlength="20"
+        placeholder="Digite a descrição do assunto"
+        (focus)="onFocus()" 
+      />
+      <!-- Mensagem de erro -->
+      <div *ngIf="erroDescricao" class="text-danger mt-1">
+        O campo "Descrição" é obrigatório!
+      </div>
+      <div *ngIf="mensagemErro" class="text-danger mt-1">
+        {{ mensagemErro }}
+      </div>
+      <div *ngIf="sucesso" class="text-success mt-1">
+        {{ sucesso }}
       </div>
     </div>
-  
-    <form (ngSubmit)="onSalvar()" novalidate>
-      
-      <div class="mb-3">
-        <label for="descricao" class="form-label">Descrição</label>
-        <input
-          id="descricao"
-          type="text"
-          class="form-control"
-          [(ngModel)]="descricao"
-          name="descricao"
-          maxlength="20"
-          placeholder="Digite a descrição do assunto"
-          (focus)="onFocus()" 
-        />
-        <!-- Mensagem de erro -->
-        <div *ngIf="erroDescricao" class="text-danger mt-1">
-          O campo "Descrição" é obrigatório!
+
+    <!-- Botão Salvar -->
+    <button type="button" class="btn btn-primary" (click)="onSalvar()">Salvar</button>
+  </form>
+</div>
+<div
+  class="modal fade"
+  id="mensagemModal"
+  tabindex="-1"
+  aria-labelledby="mensagemModalLabel"
+  aria-hidden="true"
+  style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5);"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="mensagemModalLabel">{{ tituloModal }}</h5>
+        <button
+          type="button"
+          class="btn-close"
+          aria-label="Close"
+          (click)="fecharModalMensagem()"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <div *ngIf="tipoMensagem === 'sucesso'" class="text-success mt-1">
+          {{ mensagemModal }}
         </div>
-        <div *ngIf="mensagemErro" class="text-danger mt-1">
-          {{ mensagemErro }}
-        </div>
-        <div *ngIf="sucesso" class="text-success mt-1">
-          {{ sucesso }}
+
+        <div *ngIf="tipoMensagem === 'erro'" class="text-danger mt-1">
+          {{ mensagemModal }}
         </div>
       </div>
-  
-      <!-- Botão Salvar -->
-      <button type="button" class="btn btn-primary" (click)="onSalvar()">Salvar</button>
-    </form>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" (click)="fecharModalMensagem()">OK</button>
+      </div>
+    </div>
   </div>
+</div>

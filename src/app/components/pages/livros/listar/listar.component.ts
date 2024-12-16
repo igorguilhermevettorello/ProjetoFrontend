@@ -65,4 +65,24 @@ export class ListarComponent implements OnInit {
       }
     });
   }
+
+  downloadArquivo(): void {
+    this.livroService.gerarArquivo().subscribe({
+      next: (data: Blob) => {
+        // Cria um link temporário para o download
+        const url = window.URL.createObjectURL(data);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'arquivo-gerado.pdf'; // Nome do arquivo (ajuste conforme necessário)
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url); // Libera o recurso
+        document.body.removeChild(a);
+        console.log('Download realizado com sucesso.');
+      },
+      error: (err) => {
+        console.error('Erro ao gerar o arquivo:', err);
+      }
+    });
+  }
 }

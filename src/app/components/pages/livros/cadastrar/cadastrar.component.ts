@@ -36,6 +36,8 @@ export class CadastrarComponent implements OnInit {
   erroAnoPublicacaoNumber: boolean = false; 
 
   valor: number = 0; // Valor do livro (numérico)
+  erroValor: boolean = false; 
+
   customOptions: Partial<CurrencyMaskConfig> = {
     align: 'left',              // Alinhamento do valor (esquerda)
     prefix: 'R$ ',              // Prefixo monetário
@@ -54,12 +56,18 @@ export class CadastrarComponent implements OnInit {
   erroNome: boolean = false;
   listaAutores: ListaAutoresModel[] = [];
   autoresSelecionados: string[] = [];
+  erroAutoresSelecionados: boolean = false; 
 
   modalVisivelAssunto: boolean = false;
   novoAssunto: CriarAssuntoModel = { descricao: '' };
   erroDescricao: boolean = false;
   listaAssuntos: ListaAssuntosModel[] = [];
   assuntosSelecionados: string[] = [];
+  erroAssuntosSelecionados: boolean = false; 
+
+  tituloModal: string = 'Mensagem'; 
+  mensagemModal: string = '';  
+  tipoMensagem: string = '';  
 
   constructor(
     private livroService: LivroService,
@@ -121,10 +129,9 @@ export class CadastrarComponent implements OnInit {
     this.loading = true;
     this.livroService.obterLivroPorId(this.livroId!).subscribe({
       next: (livro: ListaLivrosModel) => {
-        debugger;
         this.titulo = livro.titulo;
         this.editora = livro.editora;
-        this.editora = livro.edicao.toString();
+        this.edicao = livro.edicao.toString();
         this.anoPublicacao = livro.anoPublicacao.toString();
         this.valor = livro.valor;
         this.autoresSelecionados = livro.autores.map(item => item.id);
@@ -173,6 +180,21 @@ export class CadastrarComponent implements OnInit {
       return;
     }
 
+    if (this.valor <= 0) {
+      this.erroValor = true;
+      return
+    }
+
+    if (this.autoresSelecionados.length == 0) {
+      this.erroAutoresSelecionados = true;
+      return;
+    }
+
+    if (this.assuntosSelecionados.length == 0) {
+      this.erroAssuntosSelecionados = true;
+      return;
+    }
+
     this.loading = true;
 
     if (this.livroId) {
@@ -189,13 +211,16 @@ export class CadastrarComponent implements OnInit {
       this.livroService.editarLivro(this.livroId, livro).subscribe({
         next: () => {
           this.loading = false;
-          this.sucesso = 'Livro atualizado com sucesso!';
-          this.router.navigate(['/livros/listar']);
+          this.abrirModalMensagem('Sucesso', 'O livro atualizado com sucesso!', 'sucesso');
+          // this.sucesso = 'Livro atualizado com sucesso!';
+          // this.router.navigate(['/livros/listar']);
         },
         error: (error) => {
-          console.error('Erro ao atualizar livro:', error);
-          this.mensagemErro = 'Erro ao atualizar o livro.';
+          // console.error('Erro ao atualizar livro:', error);
+          // this.mensagemErro = 'Erro ao atualizar o livro.';
           this.loading = false;
+          this.abrirModalMensagem('Mensagem', `Erro ao atualizado livro: ${JSON.stringify(error)}` , 'erro');
+          console.error('Erro ao atualizar livro:', error);
         }
       });
     } else {
@@ -212,13 +237,15 @@ export class CadastrarComponent implements OnInit {
       this.livroService.salvarLivro(livro).subscribe({
         next: () => {
           this.loading = false;
-          this.sucesso = 'Livro salvo com sucesso!';
-          this.router.navigate(['/livros/listar']);
+          this.abrirModalMensagem('Sucesso', 'O livro salvo com sucesso!', 'sucesso');
+          // this.sucesso = 'Livro salvo com sucesso!';
+          // this.router.navigate(['/livros/listar']);
         },
         error: (error) => {
-          console.error('Erro ao salvar livro:', error);
-          this.mensagemErro = 'Erro ao salvar o livro.';
+          // this.mensagemErro = 'Erro ao salvar o livro.';
           this.loading = false;
+          this.abrirModalMensagem('Mensagem', `Erro ao salvar livro: ${JSON.stringify(error)}` , 'erro');
+          console.error('Erro ao salvar livro:', error);
         }
       });
     }
@@ -302,5 +329,50 @@ export class CadastrarComponent implements OnInit {
         console.error('Erro ao salvar assunto:', error);
       }
     });
+  }
+
+  abrirModalMensagem(titulo: string, mensagem: string, tipo: 'sucesso' | 'erro'): void {
+    this.tituloModal = titulo;
+    this.mensagemModal = mensagem;
+    this.tipoMensagem = tipo;
+
+    const modalElement = document.getElementById('mensagemModal');
+    if (modalElement) {
+      modalElement.classList.add('show');
+      modalElement.style.display = 'block';
+      document.body.classList.add('modal-open');
+    }
+  }
+
+  fecharModalMensagem(): void {
+    const modalElement = document.getElementById('mensagemModal');
+    if (modalElement) {
+      modalElement.classList.remove('show');
+      modalElement.style.display = 'none';
+      document.body.classList.remove('modal-open');
+    }
+    this.router.navigate(['/livros/listar']);
+  }
+
+  validarNumero(event: Event): void {
+    const inputElement = event.target as HTMLInputElement;
+    let valor = inputElement.value;
+
+    // Remove qualquer caractere não numérico
+    valor = valor.replace(/\D/g, '');
+
+    if (valor.length > 4) {
+      // Limita a entrada para os primeiros 4 números
+      valor = valor.slice(0, 4);
+    }
+    inputElement.value = valor;
+  }
+
+  onChangeSelectAutores(event: Event): void {
+    this.erroAutoresSelecionados = false;
+  }
+
+  onChangeSelectAssuntos(event: Event): void {
+    this.erroAssuntosSelecionados = false;
   }
 }

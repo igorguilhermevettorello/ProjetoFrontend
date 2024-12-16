@@ -1,5 +1,8 @@
 <div class="container mt-4">
-  <h3>Lista de Livros</h3>
+  <div class="align-elements mb-3">
+    <h3>Lista de Livros</h3>
+    <button class="btn btn-primary" (click)="downloadArquivo()">Baixar Arquivo</button>
+  </div>
 
   <!-- Loading -->
   <div *ngIf="loading" class="text-center">
@@ -22,6 +25,7 @@
         <th>Título</th>
         <th>Autores</th>
         <th>Assuntos</th>
+        <th>Valor</th>
       </tr>
     </thead>
     <tbody>
@@ -46,6 +50,7 @@
             <p>{{ assunto.descricao }}</p>
           </div>
         </td>
+        <td>{{ livro.valor | monetario}}</td>
       </tr>
     </tbody>
   </table>

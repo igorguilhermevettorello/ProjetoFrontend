@@ -14,6 +14,10 @@ export class ListarComponent implements OnInit {
   mensagemErro: string = ''; 
   autorSelecionadoId: string = '';
 
+  tituloModal: string = 'Mensagem'; 
+  mensagemModal: string = '';  
+  tipoMensagem: string = '';  
+
   constructor(private autorService: AutorService) {}
 
   ngOnInit(): void {
@@ -55,14 +59,36 @@ export class ListarComponent implements OnInit {
   confirmarDelecao(): void {
     this.autorService.deletarAutor(this.autorSelecionadoId).subscribe({
       next: () => {
-        console.log('Autor deletado com sucesso!');
         this.fecharModal();
+        this.abrirModalMensagem('Sucesso', 'Autor deletado com sucesso!', 'sucesso');
         this.carregarAutores();
       },
       error: (error) => {
-        console.error('Erro ao deletar autor:', error);
         this.fecharModal();
+        this.abrirModalMensagem('Mensagem', `Erro ao deletar autor: ${JSON.stringify(error)}` , 'erro');
       }
     });
+  }
+
+  abrirModalMensagem(titulo: string, mensagem: string, tipo: 'sucesso' | 'erro'): void {
+    this.tituloModal = titulo;
+    this.mensagemModal = mensagem;
+    this.tipoMensagem = tipo;
+
+    const modalElement = document.getElementById('mensagemModal');
+    if (modalElement) {
+      modalElement.classList.add('show');
+      modalElement.style.display = 'block';
+      document.body.classList.add('modal-open');
+    }
+  }
+
+  fecharModalMensagem(): void {
+    const modalElement = document.getElementById('mensagemModal');
+    if (modalElement) {
+      modalElement.classList.remove('show');
+      modalElement.style.display = 'none';
+      document.body.classList.remove('modal-open');
+    } 
   }
 }

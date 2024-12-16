@@ -12,7 +12,11 @@ export class ListarComponent implements OnInit {
   assuntos: ListaAssuntosModel[] = [];
   loading: boolean = false; 
   mensagemErro: string = ''; 
-  autorSelecionadoId: string = '';
+  assuntoSelecionadoId: string = '';
+
+  tituloModal: string = 'Mensagem'; 
+  mensagemModal: string = '';  
+  tipoMensagem: string = '';  
 
   constructor(private assuntoService: AssuntoService) {}
 
@@ -30,7 +34,7 @@ export class ListarComponent implements OnInit {
         this.loading = false;
       },
       error: (error) => {
-        this.mensagemErro = 'Erro ao carregar autores. Tente novamente.';
+        this.mensagemErro = 'Erro ao carregar assuntos. Tente novamente.';
         console.error(error);
         this.loading = false;
       }
@@ -38,7 +42,7 @@ export class ListarComponent implements OnInit {
   }
 
   abrirModalDeletar(id: string): void {
-    this.autorSelecionadoId = id;
+    this.assuntoSelecionadoId = id;
     const modal = document.getElementById('modalDeletar');
     if (modal) {
       modal.style.display = 'block';
@@ -53,28 +57,39 @@ export class ListarComponent implements OnInit {
   }
 
   confirmarDelecao(): void {
-    this.assuntoService.deletarAssunto(this.autorSelecionadoId).subscribe({
+    this.assuntoService.deletarAssunto(this.assuntoSelecionadoId).subscribe({
       next: () => {
-        console.log('Autor deletado com sucesso!');
         this.fecharModal();
+        this.abrirModalMensagem('Sucesso', 'O assunto deletado com sucesso!', 'sucesso');
         this.carregarAssuntos(); 
       },
       error: (error) => {
-        console.error('Erro ao deletar autor:', error);
         this.fecharModal();
+        this.abrirModalMensagem('Mensagem', `Erro ao deletar assunto: ${JSON.stringify(error)}` , 'erro');
+        console.error('Erro ao deletar assunto:', error);
       }
     });
   }
 
-  // // Placeholder para editar autor
-  // editarAutor(id: string): void {
-  //   console.log(`Editar autor com ID: ${id}`);
-  //   // Aqui você pode navegar para a página de edição
-  // }
+  abrirModalMensagem(titulo: string, mensagem: string, tipo: 'sucesso' | 'erro'): void {
+    this.tituloModal = titulo;
+    this.mensagemModal = mensagem;
+    this.tipoMensagem = tipo;
 
-  // // Placeholder para deletar autor
-  // deletarAutor(id: string): void {
-  //   console.log(`Deletar autor com ID: ${id}`);
-  //   // Aqui você pode chamar um método do serviço para deletar o autor
-  // }
+    const modalElement = document.getElementById('mensagemModal');
+    if (modalElement) {
+      modalElement.classList.add('show');
+      modalElement.style.display = 'block';
+      document.body.classList.add('modal-open');
+    }
+  }
+
+  fecharModalMensagem(): void {
+    const modalElement = document.getElementById('mensagemModal');
+    if (modalElement) {
+      modalElement.classList.remove('show');
+      modalElement.style.display = 'none';
+      document.body.classList.remove('modal-open');
+    }
+  }
 }
